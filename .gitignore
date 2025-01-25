@@ -1,0 +1,42 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+
+# Test coverage
+coverage/
+
+# Linting cache
+.eslintcache
+
+# Typescript output (if compiled manually)
+*.js.map
+*.d.ts
+
+# Other generated files
+package-lock.json
+yarn.lock
+
+node_modules
