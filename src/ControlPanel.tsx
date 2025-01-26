@@ -76,7 +76,7 @@ function ControlPanel({ context }: { context: PanelExtensionContext }): ReactEle
       op: "setParameters",
       parameters: [
         {
-          name: `pid_node.${nodeParams[index]}`,
+          name: `${selectedNode}.${nodeParams[index]}`,
           value,
           type: "float64",
         },
@@ -95,7 +95,7 @@ function ControlPanel({ context }: { context: PanelExtensionContext }): ReactEle
       op: "setParameters",
       parameters: [
         {
-          name: `pid_node.${nodeParams[index]}`,
+          name: `${selectedNode}.${nodeParams[index]}`,
           value,
           type: "float64",
         },
