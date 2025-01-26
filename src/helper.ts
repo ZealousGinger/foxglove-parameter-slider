@@ -37,7 +37,8 @@ export function extractNodeNames(jsonString: string): string[] | string {
         !param.name.includes("max") &&
         !param.name.includes("step") &&
         !param.name.includes("location") &&
-        !param.name.includes("sim")
+        !param.name.includes("sim") &&
+        !param.name.includes("__")
       );
 
       const min = jsonObject.parameters

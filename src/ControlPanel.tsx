@@ -16,7 +16,7 @@ function ControlPanel({ context }: { context: PanelExtensionContext }): ReactEle
   const [stepValues, setStepValues] = useState<number[]>([]);
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://localhost:8765", ["foxglove.websocket.v1"]);
+    const websocket = new WebSocket("ws://192.168.1.100:8765", ["foxglove.websocket.v1"]);
 
     websocket.onopen = () => {
       console.log("WebSocket connection established");
