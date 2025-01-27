@@ -147,7 +147,7 @@ function ControlPanel({ context }: { context: PanelExtensionContext }): ReactEle
   }, [context, nodeOptions, selectedNode, actionHandler]);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: "1rem", display: "flex", flexDirection: "column", overflowY: "auto", height: "100%"}}>
       <h2>Parameter slider</h2>
       <p>Click on 'Get Parameters', on the panel settings, select the node.</p>
 
