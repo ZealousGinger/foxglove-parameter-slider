@@ -30,30 +30,33 @@ export function extractNodeNames(jsonString: string): string[] | string {
       throw new Error("Invalid JSON structure: 'parameters' field is missing or not an array.");
     }
   
-    const includedKeywords = ["min", "max", "step", "location", "sim", "__"];
-    const excludedKeywords = ["config_location"];
-    const parameters = jsonObject.parameters.filter((param: any) => 
-      param.name.startsWith(`/${nodeName}.`) &&
-      includedKeywords.some(keyword => param.name.endsWith(`_${keyword}`)) &&
-      !excludedKeywords.some(keyword => param.name.includes(keyword))
-    );
+    const parameters = jsonObject.parameters
+      .filter((param: any) =>
+        param.name.startsWith(`/${nodeName}.`) &&
+        !param.name.endsWith("min") &&
+        !param.name.endsWith("max") &&
+        !param.name.endsWith("step") &&
+        !param.name.includes("location") &&
+        !param.name.includes("sim") &&
+        !param.name.endsWith("__")
+      );
 
       const min = jsonObject.parameters
       .filter((param: any) => 
         param.name.startsWith(`/${nodeName}.`) &&
-        param.name.includes("min")
+        param.name.endsWith("min")
       );
 
       const max = jsonObject.parameters
       .filter((param: any) => 
         param.name.startsWith(`/${nodeName}.`) &&
-        param.name.includes("max")
+        param.name.endsWith("max")
       );
 
       const step = jsonObject.parameters
       .filter((param: any) => 
         param.name.startsWith(`/${nodeName}.`) &&
-        param.name.includes("step")
+        param.name.endsWith("step")
       );
   
     const paramNames = parameters.map((param: any) => param.name.split(".")[1]);

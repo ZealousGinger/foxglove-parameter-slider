@@ -15,11 +15,26 @@ function ControlPanel({ context }: { context: PanelExtensionContext }): ReactEle
   const [maxValues, setMaxValues] = useState<number[]>([]);
   const [stepValues, setStepValues] = useState<number[]>([]);
 
-  useEffect(() => {
+  const fetchParameters = useCallback(() => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          op: "getParameters",
+          parameterNames: [],
+          id: "fetch-parameters",
+        })
+      );
+    } else {
+      console.error("WebSocket is not open");
+    }
+  }, [ws]);
+
+    useEffect(() => {
     const websocket = new WebSocket("ws://192.168.1.100:8765", ["foxglove.websocket.v1"]);
 
     websocket.onopen = () => {
       console.log("WebSocket connection established");
+      setWs(websocket);
     };
 
     websocket.onerror = (error) => {
@@ -41,68 +56,24 @@ function ControlPanel({ context }: { context: PanelExtensionContext }): ReactEle
     setWs(websocket);
 
     return () => {
-      if (websocket.readyState === WebSocket.OPEN) {
+      if (websocket.readyState !== WebSocket.OPEN) {
         websocket.close();
       }
     };
   }, []);
-
-  const sendMessage = useCallback(
-    (message: object) => {
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify(message));
-      } else {
-        console.error("WebSocket is not open");
-      }
-    },
-    [ws],
-  );
-
-  const fetchParameters = useCallback(() => {
-    const message = {
-      op: "getParameters",
-      parameterNames: [],
-      id: "fetch-parameters",
-    };
-    sendMessage(message);
-  }, [sendMessage]);
-
+  
   const handleSliderChange = (index: number, value: number) => {
     const newValues = [...sliderValues];
     newValues[index] = value;
     setSliderValues(newValues);
-
-    const setMessage = {
-      op: "setParameters",
-      parameters: [
-        {
-          name: `${selectedNode}.${nodeParams[index]}`,
-          value,
-          type: "float64",
-        },
-      ],
-      id: `slider-${index}-${value}-${nodeParams[index]}`,
-    };
-    sendMessage(setMessage);
+    context.setParameter(`${selectedNode}.${nodeParams[index]}`, value);
   };
 
   const handleValueChange = (index: number, value: number) => {
     const newValues = [...sliderValues];
     newValues[index] = value;
     setSliderValues(newValues);
-
-    const setMessage = {
-      op: "setParameters",
-      parameters: [
-        {
-          name: `${selectedNode}.${nodeParams[index]}`,
-          value,
-          type: "float64",
-        },
-      ],
-      id: `slider-${index}-${value}-${nodeParams[index]}`,
-    };
-    sendMessage(setMessage);
+    context.setParameter(`${selectedNode}.${nodeParams[index]}`, value);
   };
 
   const actionHandler = useCallback((action: SettingsTreeAction) => {
