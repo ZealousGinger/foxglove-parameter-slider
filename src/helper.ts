@@ -30,16 +30,13 @@ export function extractNodeNames(jsonString: string): string[] | string {
       throw new Error("Invalid JSON structure: 'parameters' field is missing or not an array.");
     }
   
-    const parameters = jsonObject.parameters
-      .filter((param: any) => 
-        param.name.startsWith(`/${nodeName}.`) &&
-        !param.name.includes("min") &&
-        !param.name.includes("max") &&
-        !param.name.includes("step") &&
-        !param.name.includes("location") &&
-        !param.name.includes("sim") &&
-        !param.name.includes("__")
-      );
+    const includedKeywords = ["min", "max", "step", "location", "sim", "__"];
+    const excludedKeywords = ["config_location"];
+    const parameters = jsonObject.parameters.filter((param: any) => 
+      param.name.startsWith(`/${nodeName}.`) &&
+      includedKeywords.some(keyword => param.name.endsWith(`_${keyword}`)) &&
+      !excludedKeywords.some(keyword => param.name.includes(keyword))
+    );
 
       const min = jsonObject.parameters
       .filter((param: any) => 
